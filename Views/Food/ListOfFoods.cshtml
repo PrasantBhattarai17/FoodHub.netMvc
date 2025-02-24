@@ -1,0 +1,66 @@
+﻿@model List<FoodDto>
+<h1 class="text-center m-3 fs-1 font-monospace">Foods List</h1>
+
+<table class="table table-bordered text-center align-middle">
+    <thead class="border-2">
+        <tr>
+            <th colspan="8" class="fs-5 text-warning">All Registered Hotels</th>
+        </tr>
+        <tr>
+            <th>Food Name</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Cost</th>
+            <th>Discounts</th>
+            <th>Available In</th>
+            <th class="">Actions</th>
+        </tr>
+    </thead>
+    <tbody class="border-2">
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.FoodName</td>
+                <td>@a.Description</td>
+                <td>@a.Amount</td>
+                <td>@a.Category</td>
+                <td>@a.Cost</td>
+                <td>
+                    @if (@a.Discount == "0")
+                    {
+                        <p class="p-1">N/A</p>
+                    }
+                    else
+                    {
+                        @a.Discount
+                    }
+                </td>
+                <td>@a.HotelName</td>
+                <td class="">
+                    <form method="post" asp-controller="Food" asp-action="EditFoods" class="d-inline-block">
+                        <input type="hidden" name="id" value="@a.FoodId" />
+                        <button class="btn btn-warning py-1" type="submit">Edit</button>
+                    </form>
+                    <form method="post" asp-controller="Food" asp-action="DeleteFoods" class="d-inline-block">
+                        <input type="hidden" name="id" value="@a.FoodId" />
+                        <button class="btn btn-danger   py-1" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div class="d-flex">  
+
+
+<form method="get">
+    <button class="btn btn-dark text-white m-4" asp-controller="Food" asp-action="AddaFood">Add new Food</button>
+</form>
+<form method="get">
+    <button class="btn btn-dark text-white m-4" asp-controller="Others" asp-action="BackToDashboard">Back To Dashboard</button>
+</form>
+
+</div>

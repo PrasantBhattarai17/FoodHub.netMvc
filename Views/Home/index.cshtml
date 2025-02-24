@@ -1,0 +1,43 @@
+﻿@model UserDTO
+<div class="container">
+<form method="post">
+    <h1>Register your account</h1>
+    <div class="container pt-4">
+        <div class="col">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Username" class="form-label"></label>
+                <input asp-for="Username" class="form-control border-1 rounded" placeholder="Username" autocomplete="off" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control border-1 rounded" placeholder="you@example.com" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" type="password" class="form-control border-1 rounded" placeholder="Password" autocomplete="off" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 pt-2 d-flex justify-content-center align-items-center">
+                <button class="btn btn-dark rounded w-25 fs-5 " asp-controller="Auth" asp-action="Register" type="submit">Register</button>
+            </div> 
+            <div class="container pt-4 ">
+                  <span class="p-1">Already have an Account?</span>
+              <a class="font-monospace text-decoration-underline" asp-controller="Others" asp-action="MoveToLoginPage">Login</a>
+        </div>
+        </div>
+    </div>
+</form>
+</div>
+
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+}

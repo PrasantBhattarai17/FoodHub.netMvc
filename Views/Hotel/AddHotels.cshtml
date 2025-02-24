@@ -1,0 +1,67 @@
+﻿@model HotelDto
+<div class="container">
+    <form method="post">
+        <h1>Register your account</h1>
+        <div class="container pt-4">
+            <div class="col">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="HotelName" class="form-label"></label>
+                    <input asp-for="HotelName" class="form-control border-1 rounded"  />
+                    <span asp-validation-for="HotelName" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Location" class="form-label"></label>
+                    <input asp-for="Location" class="form-control border-1 rounded"  />
+                    <span asp-validation-for="Location" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Rating" class="form-label"></label>
+                    <input asp-for="Rating" class="form-control border-1 rounded"  />
+                    <span asp-validation-for="Rating" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Price" class="form-label"></label>
+                    <input asp-for="Price" class="form-control border-1 rounded"  />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Cuisines" class="form-label"></label>
+                    <input asp-for="Cuisines" class="form-control border-1 rounded" />
+                    <span asp-validation-for="Cuisines" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="category" class="form-label"></label>
+                    <input asp-for="category" class="form-control border-1 rounded" />
+                    <span asp-validation-for="category" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="HotelImg" class="form-label"></label>
+                    <input asp-for="HotelImg" class="form-control border-1 rounded" />
+                    <span asp-validation-for="HotelImg" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Discount" class="form-label"></label>
+                    <input asp-for="Discount" class="form-control border-1 rounded" />
+                    <span asp-validation-for="Discount" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 pt-2 d-flex justify-content-center align-items-center">
+                    <button class="btn btn-dark rounded w-25 fs-5 " asp-controller="Hotel" asp-action="CreateHotels" type="submit">Add</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+}

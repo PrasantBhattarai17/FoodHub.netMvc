@@ -1,0 +1,36 @@
+﻿@model List<UserDTO>
+<form method="post">
+
+<h1>Registered Users</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>UserId</th>
+            <th>Username</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Username</td>
+                <td>
+                        <form method="post" asp-controller="Others" asp-action="EditUser">
+                            <input type="hidden" name="id" value="@user.Id" />
+                            <button class="btn btn-warning" type="submit">Edit</button>
+                        </form> |<form method="post" asp-controller="Others" asp-action="DeleteUser">
+                            <input type="hidden" name="id" value="@user.Id" />
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</form>
+<form method="get">
+    <button class="btn btn-dark text-white m-4" asp-controller="Others" asp-action="BackToDashboard">Back To DashBoard</button>
+</form>
