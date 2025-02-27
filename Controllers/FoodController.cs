@@ -99,7 +99,36 @@ namespace YetiMunch.Controllers
             return View("ListOfFoods",_ListofFoods); 
             }
 
-        
+        [HttpPost]
+        public async Task<IActionResult> DeleteFoods([FromForm] int id)
+        {
+            var _foodobj = await _db.Foods.FindAsync(id);
+            if (_foodobj == null)
+            {
+                return NotFound();
+            }
+
+            _db.Foods.Remove(_foodobj);
+            await _db.SaveChangesAsync();
+
+
+            List<FoodDto> _foodList= _db.Foods.Select(f=> new FoodDto
+            {
+                FoodId = f.FoodId,
+                FoodName = f.FoodName,
+                Description = f.Description,
+                Cost = f.Cost,
+                Amount = f.Amount,
+                Category = f.Category,
+                Discount = f.Discount,
+                HotelId = f.HotelId,
+                HotelName = f.Hotel.HotelName
+            }).ToList();
+
+
+            return View("ListOfFoods", _foodList);
+            
+        }
 
     }
 }

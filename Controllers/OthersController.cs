@@ -47,10 +47,16 @@ namespace YetiMunch.Controllers
             }
 
             var obj = await _db.Users.FindAsync(id);
+
             if (obj == null)
             {
                 return NotFound();
             }
+            //if(obj.Username == "admin" && obj.Email == "admin@amin")
+            //{
+            //    ViewBag("Invalid!");
+            //    return View("Enduser");
+            //}
 
             _db.Users.Remove(obj);
             await _db.SaveChangesAsync();
@@ -120,6 +126,14 @@ namespace YetiMunch.Controllers
         {
             return View("Dashboard");
         }
-
+         
+        public IActionResult Signout()
+        {
+            return View("Login");
+        }
+        public IActionResult BackToRegisterPage()
+        {
+            return View("Register");
+        }
     }
 }

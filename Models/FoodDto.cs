@@ -16,6 +16,7 @@ namespace YetiMunch.Models
 
         public string Category { get; set; } //Veg nonveg vegan ..dairy..beverage ..
 
+        public string FoodImgUrl { get; set; }
         public string Amount { get; set; } //amount of the food 
 
         public string Discount { get; set; }//discounts if available

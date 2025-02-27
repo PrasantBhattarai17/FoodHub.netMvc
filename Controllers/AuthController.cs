@@ -80,9 +80,28 @@ namespace YetiMunch.Controllers
 
             var token = GenerateToken(user);
 
-            //HttpContext.Session.SetString("AuthToken", token); //stroing the token in the cookie or the session
+            if (user.Username == "admin" && user.Email == "admin@admin")
+            {
 
-            return View("Dashboard");
+                return View("Dashboard");
+
+            }
+            else
+            {
+                List<HotelDto> _hoteldetails = _db.Hotels.Select(_hotel => new HotelDto
+                {
+                    HotelId = _hotel.HotelId,
+                    HotelName = _hotel.HotelName,
+                    HotelImg = _hotel.HotelImg,
+                    category = _hotel.category,
+                    Cuisines = _hotel.Cuisines,
+                    Discount = _hotel.Discount,
+                    Price = _hotel.Price,
+                    Location = _hotel.Location,
+                    Rating = _hotel.Rating
+                }).ToList();
+                return View("Marketplace",_hoteldetails);
+            }
         }
         //Method to generate the jwt token for the user after sucessful login
         private string GenerateToken(User _user)

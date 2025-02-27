@@ -17,6 +17,8 @@ namespace YetiMunch.Entities
 
     public string Amount { get; set; } //amount of the food 
 
+     public string FoodImgUrl { get; set; }//img of the food
+
     public string Discount { get; set; }//discounts if available
 
     public int HotelId { get; set; } //foreign Key

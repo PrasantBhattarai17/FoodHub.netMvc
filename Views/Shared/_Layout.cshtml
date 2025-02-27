@@ -9,28 +9,14 @@
     <link rel="stylesheet" href="~/YetiMunch.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav style="background-color:darkorange" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom shadow-lg ">
-            <div class="container-fluid">
-                <a style=" font-family:fantasy"  class="navbar-brand text-white fs-3   mx-lg-4" asp-area="" asp-controller="Home" asp-action="Index">YetiMunch</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
-        </nav>
-    </header>
+    
     <div  class="full-page ">
         <main role="main" class="">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - YetiMunch - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

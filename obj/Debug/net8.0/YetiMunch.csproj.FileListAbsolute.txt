@@ -172,3 +172,4 @@ C:\Users\V C T U S\source\repos\YetiMunch\obj\Debug\net8.0\YetiMunch.csproj.Asse
 C:\Users\V C T U S\source\repos\YetiMunch\obj\Debug\net8.0\YetiMunch.csproj.Up2Date
 C:\Users\V C T U S\source\repos\YetiMunch\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\V C T U S\source\repos\YetiMunch\bin\Debug\net8.0\Microsoft.Bcl.Memory.dll
+C:\Users\V C T U S\source\repos\YetiMunch\obj\Debug\net8.0\YetiMunch.sourcelink.json

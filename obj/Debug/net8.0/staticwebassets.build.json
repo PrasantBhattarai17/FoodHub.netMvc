@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "cKM6OKno/3nO8XhdVu1UiM6TpPBRnm1N5SCpYfkB5x8=",
+  "Hash": "J3B0pROVOf3jnYUiF86iXeDX4vgMlMHw+E1lHhJVj0I=",
   "Source": "YetiMunch",
   "BasePath": "_content/YetiMunch",
   "Mode": "Default",
@@ -1317,6 +1317,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Identity": "C:\\Users\\V C T U S\\source\\repos\\YetiMunch\\wwwroot\\logo.png",
+      "SourceId": "YetiMunch",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\V C T U S\\source\\repos\\YetiMunch\\wwwroot\\",
+      "BasePath": "_content/YetiMunch",
+      "RelativePath": "logo#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "lz5oa9kqo5",
+      "Integrity": "r/2SthH0COzzKfMQI+dA+C8lcaM0/ekJLOypb+BtdbQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\logo.png"
     }
   ],
   "Endpoints": [
@@ -6237,6 +6258,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-16aFlqtpsG9RyieKZUUUjkJpqTgcJtWXwT312I4Iz1s="
+        }
+      ]
+    },
+    {
+      "Route": "logo.lz5oa9kqo5.png",
+      "AssetFile": "C:\\Users\\V C T U S\\source\\repos\\YetiMunch\\wwwroot\\logo.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "108572"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"r/2SthH0COzzKfMQI+dA+C8lcaM0/ekJLOypb+BtdbQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 05 Jul 2024 15:12:48 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "lz5oa9kqo5"
+        },
+        {
+          "Name": "label",
+          "Value": "logo.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-r/2SthH0COzzKfMQI+dA+C8lcaM0/ekJLOypb+BtdbQ="
+        }
+      ]
+    },
+    {
+      "Route": "logo.png",
+      "AssetFile": "C:\\Users\\V C T U S\\source\\repos\\YetiMunch\\wwwroot\\logo.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "108572"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"r/2SthH0COzzKfMQI+dA+C8lcaM0/ekJLOypb+BtdbQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 05 Jul 2024 15:12:48 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-r/2SthH0COzzKfMQI+dA+C8lcaM0/ekJLOypb+BtdbQ="
         }
       ]
     },
