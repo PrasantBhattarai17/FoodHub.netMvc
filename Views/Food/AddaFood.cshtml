@@ -33,6 +33,11 @@
                     <input asp-for="Category" class="form-control border-1 rounded" />
                     <span asp-validation-for="Category" class="text-danger"></span>
                 </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FoodImgUrl" class="form-label"></label>
+                    <input asp-for="FoodImgUrl" class="form-control border-1 rounded" />
+                    <span asp-validation-for="FoodImgUrl" class="text-danger"></span>
+                </div>
 
                 <div class="col-md-6 mb-3">
                     <input hidden asp-for="HotelName" class="form-control border-1 rounded" value="__" />

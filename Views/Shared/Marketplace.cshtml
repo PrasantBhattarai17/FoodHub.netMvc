@@ -27,9 +27,17 @@
             height:130px;
         }
         .navbarclass .btnOut{
-            margin:10px;
-            width:120px;
+            width:130px;
             border-radius:5px;
+            margin-right:5px;
+            color:white;
+            text-decoration:none;
+            font:bold;
+
+        } .navbarclass .btnmid{
+            width:60px;
+            border-radius:5px;
+            margin:15px;
             color:white;
             text-decoration:none;
             font:bold;
@@ -113,7 +121,12 @@
           <img class="logo"  src="~/logo.png"/>
           </a>
               </div>
-
+        <a asp-controller="Others" asp-action="MovetoLoginPage" class="btnOut">
+            <i class="fa-solid fa-cart-shopping">  Kart</i>
+        </a> 
+        <a asp-controller="Others" asp-action="MovetoLoginPage" class="btnmid">
+            <i class="fa-solid fa-user"></i>
+        </a>
               <a asp-controller="Others" asp-action="MovetoLoginPage" class="btnOut">
             <i class="fa-solid fa-right-from-bracket"> Signout</i>
                   </a>
