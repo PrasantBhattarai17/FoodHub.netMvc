@@ -14,9 +14,9 @@ namespace YetiMunch.Controllers
             _db = db;
         }
 
-        public IActionResult ListOfFoods()
+        public async Task<IActionResult> ListOfFoods()
         {
-            List<Food> _foodList = _db.Foods.Include(f=>f.Hotel).ToList();
+            List<Food> _foodList =await _db.Foods.Include(f=>f.Hotel).ToListAsync();
 
             List<FoodDto> _ListofFoods = _foodList.Select(f => new FoodDto
             {
@@ -36,15 +36,15 @@ namespace YetiMunch.Controllers
         }
 
 
-        public IActionResult AddaFood()
+        public async Task<IActionResult> AddaFood()
         {
-            var hotels = _db.Hotels
+            var hotels =await _db.Hotels
                 .Select(h => new HotelDto
                 {
                     HotelId = h.HotelId,
                     HotelName = h.HotelName
                 })
-                .ToList();
+                .ToListAsync();
 
             // Log the hotels to see if they are being fetched correctly
             Console.WriteLine($"Number of hotels fetched: {hotels?.Count}");
@@ -63,9 +63,9 @@ namespace YetiMunch.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    ViewBag.Hotels = _db.Hotels
+                    ViewBag.Hotels =await _db.Hotels
                         .Select(h => new HotelDto { HotelId = h.HotelId, HotelName = h.HotelName })
-                        .ToList();
+                        .ToListAsync();
 
                     return View("AddaFood", _food); 
                 }
@@ -81,9 +81,9 @@ namespace YetiMunch.Controllers
                     HotelId = _food.HotelId,                  
                 };
 
-                _db.Foods.Add(food);
+               await _db.Foods.AddAsync(food);
                 await _db.SaveChangesAsync();
-            List<FoodDto> _ListofFoods = _db.Foods.Select(f => new FoodDto
+            List<FoodDto> _ListofFoods =await  _db.Foods.Select(f => new FoodDto
             {
                 FoodId = f.FoodId,
                 FoodName = f.FoodName,
@@ -94,7 +94,7 @@ namespace YetiMunch.Controllers
                 Discount = f.Discount,
                 HotelId = f.HotelId,
                 HotelName = f.Hotel.HotelName
-            }).ToList();
+            }).ToListAsync();
 
             return View("ListOfFoods",_ListofFoods); 
             }
@@ -112,7 +112,7 @@ namespace YetiMunch.Controllers
             await _db.SaveChangesAsync();
 
 
-            List<FoodDto> _foodList= _db.Foods.Select(f=> new FoodDto
+            List<FoodDto> _foodList=await _db.Foods.Select(f=> new FoodDto
             {
                 FoodId = f.FoodId,
                 FoodName = f.FoodName,
@@ -123,7 +123,7 @@ namespace YetiMunch.Controllers
                 Discount = f.Discount,
                 HotelId = f.HotelId,
                 HotelName = f.Hotel.HotelName
-            }).ToList();
+            }).ToListAsync();
 
 
             return View("ListOfFoods", _foodList);

@@ -13,11 +13,11 @@ namespace YetiMunch.Controllers
             _db = db;
         }
 
-        public IActionResult ViewHotels([FromForm] int id)
+        public async Task<IActionResult> ViewHotels([FromForm] int id)
         {
-            var _hotel = _db.Hotels
+            var _hotel =await _db.Hotels
                 .Include(h => h.Foods) 
-                .FirstOrDefault(h => h.HotelId == id);
+                .FirstOrDefaultAsync(h => h.HotelId == id);
 
             if (_hotel == null)
             {
@@ -51,9 +51,9 @@ namespace YetiMunch.Controllers
             return View("HotelDetail", _hoteldetails);
         }
 
-        public IActionResult MovetoHome()
+        public async Task<IActionResult> MovetoHome()
         {
-            List<HotelDto> _hoteldetails = _db.Hotels.Select(_hotel => new HotelDto
+            List<HotelDto> _hoteldetails =await _db.Hotels.Select(_hotel => new HotelDto
             {
                 HotelId = _hotel.HotelId,
                 HotelName = _hotel.HotelName,
@@ -64,7 +64,7 @@ namespace YetiMunch.Controllers
                 Price = _hotel.Price,
                 Location = _hotel.Location,
                 Rating = _hotel.Rating
-            }).ToList();
+            }).ToListAsync();
             return View("Marketplace", _hoteldetails);
         }
 

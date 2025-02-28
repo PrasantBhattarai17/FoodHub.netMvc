@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using YetiMunch.Data;
 using YetiMunch.Entities;
@@ -12,8 +13,6 @@ namespace YetiMunch.Controllers
 
         private readonly FoodContext _db;
 
-        public object?[]? Id { get; private set; }
-
         public OthersController(FoodContext db)
         {
             _db = db;
@@ -24,9 +23,9 @@ namespace YetiMunch.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetEndUsers()
+        public async Task<IActionResult> GetEndUsers()
         {
-            List<User> registeredUsers = _db.Users.ToList(); //Acessing the users from the db as it is saved as User type
+            List<User> registeredUsers =await  _db.Users.ToListAsync(); //Acessing the users from the db as it is saved as User type
 
             // Mapping User entities to UserDTO as the model.UsersDTO is accepted by the view
             List<UserDTO> userDTOs = registeredUsers.Select( user => new UserDTO
@@ -52,20 +51,20 @@ namespace YetiMunch.Controllers
             {
                 return NotFound();
             }
-            //if(obj.Username == "admin" && obj.Email == "admin@amin")
-            //{
-            //    ViewBag("Invalid!");
-            //    return View("Enduser");
-            //}
+            if (obj.Username == "admin" && obj.Email == "admin@admin")
+            {
+                ViewBag("Invalid!");
+                return View("Enduser");
+            }
 
             _db.Users.Remove(obj);
             await _db.SaveChangesAsync();
 
-            List<UserDTO> userDTOs = _db.Users.Select(user => new UserDTO
+            List<UserDTO> userDTOs =await _db.Users.Select(user => new UserDTO
             {
                 Id = user.Id,
                 Username = user.Username
-            }).ToList();
+            }).ToListAsync();
 
 
             return View("Enduser",userDTOs); 
@@ -112,11 +111,11 @@ namespace YetiMunch.Controllers
             _userDetails.Email = _user.Email;
 
             await _db.SaveChangesAsync();
-            List<UserDTO> userDTOs = _db.Users.Select(user => new UserDTO
+            List<UserDTO> userDTOs =await _db.Users.Select(user => new UserDTO
             {
                 Id = user.Id,
                 Username = user.Username
-            }).ToList();
+            }).ToListAsync();
 
 
             return View("Enduser", userDTOs);

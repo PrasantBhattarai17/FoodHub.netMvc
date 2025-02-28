@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using YetiMunch.Data;
 using YetiMunch.Entities;
 using YetiMunch.Models;
@@ -15,9 +16,9 @@ namespace YetiMunch.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetHotels()
+        public async Task<IActionResult> GetHotels()
         {
-            List<Hotel> _hotel = _db.Hotels.ToList();
+            List<Hotel> _hotel =await _db.Hotels.ToListAsync();
             List<HotelDto> _hoteldetails= _hotel.Select(hotelList => new HotelDto
             {
                 HotelId = hotelList.HotelId,
@@ -48,7 +49,7 @@ namespace YetiMunch.Controllers
             await _db.Hotels.AddAsync(_hotel);
             _db.SaveChanges();
 
-            List<Hotel> _allhotels = _db.Hotels.ToList();
+            List<Hotel> _allhotels =await _db.Hotels.ToListAsync();
             List<HotelDto> _hoteldetails = _allhotels.Select(hotelList => new HotelDto
             {
                 HotelId = hotelList.HotelId,
@@ -80,7 +81,7 @@ namespace YetiMunch.Controllers
             _db.Hotels.Remove(obj);
             await _db.SaveChangesAsync();
 
-            List<HotelDto> _hoteldetails = _db.Hotels.Select(_hotel => new HotelDto {
+            List<HotelDto> _hoteldetails =await _db.Hotels.Select(_hotel => new HotelDto {
                 HotelId = _hotel.HotelId,
                 HotelName = _hotel.HotelName,
                 HotelImg = _hotel.HotelImg,
@@ -90,7 +91,7 @@ namespace YetiMunch.Controllers
                 Price = _hotel.Price,
                 Location = _hotel.Location,
                 Rating = _hotel.Rating
-            }).ToList();
+            }).ToListAsync();
 
 
             return View("HotelPage", _hoteldetails);
@@ -144,7 +145,7 @@ namespace YetiMunch.Controllers
             await _db.SaveChangesAsync();
 
 
-            List<HotelDto> HotelList = _db.Hotels.Select(_hotel =>
+            List<HotelDto> HotelList =await  _db.Hotels.Select(_hotel =>
             new HotelDto
             {
                 HotelId = _hotel.HotelId,
@@ -156,7 +157,7 @@ namespace YetiMunch.Controllers
                 Price = _hotel.Price,
                 Location = _hotel.Location,
                 Rating = _hotel.Rating
-            }).ToList();
+            }).ToListAsync();
 
 
             return View("HotelPage", HotelList);

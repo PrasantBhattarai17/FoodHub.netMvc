@@ -1,8 +1,10 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using YetiMunch.Data;
 using YetiMunch.Entities;
@@ -29,13 +31,13 @@ namespace YetiMunch.Controllers
         {
            
 
-            if (_db.Users.Any(u => u.Username == LoginRequest.Username))
+            if (await _db.Users.AnyAsync(u => u.Username == LoginRequest.Username))
             {
                 ModelState.AddModelError("Username", "Username already taken");
                 return View(LoginRequest);
             }
 
-            if (_db.Users.Any(u => u.Email == LoginRequest.Email))
+            if (await _db.Users.AnyAsync(u => u.Email == LoginRequest.Email))
             {
                 ModelState.AddModelError("Email", "Email address already taken");
                 return View(LoginRequest);
@@ -50,7 +52,7 @@ namespace YetiMunch.Controllers
                 PasswordH = HashedPassword
             };
 
-            _db.Users.Add(user);
+           await  _db.Users.AddAsync(user);
             await _db.SaveChangesAsync();
 
             return View("Login");
@@ -58,11 +60,11 @@ namespace YetiMunch.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(UserDTO RequestedUser)
+        public async Task<IActionResult> Login(UserDTO RequestedUser)
         {
          
 
-            var user = _db.Users.FirstOrDefault(u => u.Username == RequestedUser.Username);
+            var user =await _db.Users.FirstOrDefaultAsync(u => u.Username == RequestedUser.Username);
 
             if (user == null)
             {
@@ -88,7 +90,7 @@ namespace YetiMunch.Controllers
             }
             else
             {
-                List<HotelDto> _hoteldetails = _db.Hotels.Select(_hotel => new HotelDto
+                List<HotelDto> _hoteldetails =await _db.Hotels.Select(_hotel => new HotelDto
                 {
                     HotelId = _hotel.HotelId,
                     HotelName = _hotel.HotelName,
@@ -99,7 +101,7 @@ namespace YetiMunch.Controllers
                     Price = _hotel.Price,
                     Location = _hotel.Location,
                     Rating = _hotel.Rating
-                }).ToList();
+                }).ToListAsync();
                 return View("Marketplace",_hoteldetails);
             }
         }
