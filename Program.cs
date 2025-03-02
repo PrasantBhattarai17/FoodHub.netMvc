@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 using YetiMunch.Data;
+using YetiMunch.Services.Implementation;
+using YetiMunch.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,9 @@ var key = Encoding.UTF8.GetBytes(jwtSettings["jwtkey"]);
 
 builder.Services.AddDbContext<FoodContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 // Configure Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
