@@ -26,6 +26,11 @@ namespace YetiMunch.Models
         public string Discount { get; set; }
 
         public List<FoodDto> Foods { get; set; } = new List<FoodDto>();
+
+        public static implicit operator List<object>(HotelDto v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

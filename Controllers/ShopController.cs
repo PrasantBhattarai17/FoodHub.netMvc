@@ -2,70 +2,36 @@
 using Microsoft.EntityFrameworkCore;
 using YetiMunch.Data;
 using YetiMunch.Models;
+using YetiMunch.Services.Interfaces;
 
 namespace YetiMunch.Controllers
 {
     public class ShopController : Controller
     {
         private readonly FoodContext _db;
-        public ShopController(FoodContext db)
+        private readonly IShopService _shopService;
+        private readonly IHotelService _hotelService;
+        public ShopController(FoodContext db,IShopService shopService, IHotelService hotelService)
         {
             _db = db;
+            _shopService = shopService;
+            _hotelService = hotelService;
         }
 
         public async Task<IActionResult> ViewHotels([FromForm] int id)
         {
-            var _hotel =await _db.Hotels
-                .Include(h => h.Foods) 
-                .FirstOrDefaultAsync(h => h.HotelId == id);
-
-            if (_hotel == null)
+            var Hotel = await _shopService.ViewHotelDetails(id);
+            if (Hotel == null)
             {
-                return NotFound();
+                return BadRequest();
             }
-
-            HotelDto _hoteldetails = new HotelDto
-            {
-                HotelId = _hotel.HotelId,
-                HotelName = _hotel.HotelName,
-                HotelImg = _hotel.HotelImg,
-                category = _hotel.category,
-                Cuisines = _hotel.Cuisines,
-                Discount = _hotel.Discount,
-                Price = _hotel.Price,
-                Location = _hotel.Location,
-                Rating = _hotel.Rating,
-                Foods = _hotel.Foods.Select(f => new FoodDto
-                {
-                    FoodId = f.FoodId,
-                    FoodName = f.FoodName,
-                    Description = f.Description,
-                    Cost = f.Cost,
-                    Amount = f.Amount,
-                    Category = f.Category,
-                    Discount = f.Discount,
-                    FoodImgUrl=f.FoodImgUrl,
-                }).ToList()
-            };
-
-            return View("HotelDetail", _hoteldetails);
+            return View("HotelDetail", Hotel);
         }
 
         public async Task<IActionResult> MovetoHome()
         {
-            List<HotelDto> _hoteldetails =await _db.Hotels.Select(_hotel => new HotelDto
-            {
-                HotelId = _hotel.HotelId,
-                HotelName = _hotel.HotelName,
-                HotelImg = _hotel.HotelImg,
-                category = _hotel.category,
-                Cuisines = _hotel.Cuisines,
-                Discount = _hotel.Discount,
-                Price = _hotel.Price,
-                Location = _hotel.Location,
-                Rating = _hotel.Rating
-            }).ToListAsync();
-            return View("Marketplace", _hoteldetails);
+            var Hotels = await _hotelService.GetAllHotels();
+            return View("Marketplace", Hotels);
         }
 
     }

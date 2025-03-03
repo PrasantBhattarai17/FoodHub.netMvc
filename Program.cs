@@ -29,6 +29,9 @@ builder.Services.AddDbContext<FoodContext>(options =>
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddScoped<IFoodService, FoodService>();
+builder.Services.AddScoped<IShopService, ShopService>();
 
 
 

@@ -1,38 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Reflection.Metadata.Ecma335;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using YetiMunch.Data;
 using YetiMunch.Entities;
 using YetiMunch.Models;
+using YetiMunch.Services.Interfaces;
 
 namespace YetiMunch.Controllers
 {
     public class FoodController : Controller
     {
         private readonly FoodContext _db;
-        public FoodController(FoodContext db)
+        private readonly IFoodService _foodService;
+        public FoodController(FoodContext db,IFoodService foodService)
         {
             _db = db;
+            _foodService = foodService;
         }
 
         public async Task<IActionResult> ListOfFoods()
         {
-            List<Food> _foodList =await _db.Foods.Include(f=>f.Hotel).ToListAsync();
-
-            List<FoodDto> _ListofFoods = _foodList.Select(f => new FoodDto
+            var FoodLists = await _foodService.GetAllFood();
+            if (FoodLists == null)
             {
-                FoodId = f.FoodId,
-                FoodName = f.FoodName,
-                Description = f.Description,
-                Cost = f.Cost,
-                Amount = f.Amount,
-                Category = f.Category,
-                Discount = f.Discount,
-                HotelId = f.HotelId,
-                HotelName = f.Hotel.HotelName
-            }).ToList();
+                return BadRequest();
+            }
 
-
-            return View(_ListofFoods);
+            return View(FoodLists);
         }
 
 
@@ -46,8 +40,6 @@ namespace YetiMunch.Controllers
                 })
                 .ToListAsync();
 
-            // Log the hotels to see if they are being fetched correctly
-            Console.WriteLine($"Number of hotels fetched: {hotels?.Count}");
 
             ViewBag.Hotels = hotels ?? new List<HotelDto>();
 
@@ -59,7 +51,7 @@ namespace YetiMunch.Controllers
 
 
         [HttpPost]
-            public async Task<IActionResult> AddFoods([FromForm] FoodDto _food)
+            public async Task<IActionResult> AddFoods([FromForm] FoodDto food)
             {
                 if (!ModelState.IsValid)
                 {
@@ -67,66 +59,30 @@ namespace YetiMunch.Controllers
                         .Select(h => new HotelDto { HotelId = h.HotelId, HotelName = h.HotelName })
                         .ToListAsync();
 
-                    return View("AddaFood", _food); 
+                    return View("AddaFood", food); 
                 }
-
-                var food = new Food
-                {
-                    FoodName = _food.FoodName,
-                    Description = _food.Description,
-                    Category = _food.Category,
-                    Discount = _food.Discount,
-                    Cost = _food.Cost,
-                    Amount = _food.Amount,
-                    HotelId = _food.HotelId,                  
-                };
-
-               await _db.Foods.AddAsync(food);
-                await _db.SaveChangesAsync();
-            List<FoodDto> _ListofFoods =await  _db.Foods.Select(f => new FoodDto
+            var result = await _foodService.AddNewFood(food);
+            if (!result)
             {
-                FoodId = f.FoodId,
-                FoodName = f.FoodName,
-                Description = f.Description,
-                Cost = f.Cost,
-                Amount = f.Amount,
-                Category = f.Category,
-                Discount = f.Discount,
-                HotelId = f.HotelId,
-                HotelName = f.Hotel.HotelName
-            }).ToListAsync();
+                return BadRequest();
+            }
 
-            return View("ListOfFoods",_ListofFoods); 
+            var ListofFoods = await _foodService.GetAllFood();
+
+
+            return View("ListOfFoods",ListofFoods); 
             }
 
         [HttpPost]
         public async Task<IActionResult> DeleteFoods([FromForm] int id)
         {
-            var _foodobj = await _db.Foods.FindAsync(id);
-            if (_foodobj == null)
-            {
-                return NotFound();
+            var result = await _foodService.DeleteFood(id);
+            if(!result){
+                return BadRequest();
             }
+            var foodList = await _foodService.GetAllFood();
 
-            _db.Foods.Remove(_foodobj);
-            await _db.SaveChangesAsync();
-
-
-            List<FoodDto> _foodList=await _db.Foods.Select(f=> new FoodDto
-            {
-                FoodId = f.FoodId,
-                FoodName = f.FoodName,
-                Description = f.Description,
-                Cost = f.Cost,
-                Amount = f.Amount,
-                Category = f.Category,
-                Discount = f.Discount,
-                HotelId = f.HotelId,
-                HotelName = f.Hotel.HotelName
-            }).ToListAsync();
-
-
-            return View("ListOfFoods", _foodList);
+            return View("ListOfFoods", foodList);
             
         }
 
