@@ -5,17 +5,20 @@ using Microsoft.VisualBasic;
 using YetiMunch.Data;
 using YetiMunch.Entities;
 using YetiMunch.Models;
+using YetiMunch.Services.Interfaces;
 
 namespace YetiMunch.Controllers
 {
     public class OthersController : Controller
     {
 
+        private readonly IUserService _userService;
         private readonly FoodContext _db;
 
-        public OthersController(FoodContext db)
+        public OthersController(IUserService userService, FoodContext db)
         {
             _db = db;
+            _userService = userService;
         }
         public IActionResult MovetoLoginPage()
         {
@@ -25,101 +28,50 @@ namespace YetiMunch.Controllers
         [HttpGet]
         public async Task<IActionResult> GetEndUsers()
         {
-            List<User> registeredUsers =await  _db.Users.ToListAsync(); //Acessing the users from the db as it is saved as User type
-
-            // Mapping User entities to UserDTO as the model.UsersDTO is accepted by the view
-            List<UserDTO> userDTOs = registeredUsers.Select( user => new UserDTO
-            {
-                Id = user.Id,
-                Username = user.Username
-            }).ToList();
-
-            return View("Enduser", userDTOs);
+            var users=await _userService.GetAllUsers();
+            return View("EndUser", users);
         }
         
         [HttpPost]
         public async Task<IActionResult> DeleteUser([FromForm] int id)
         {
-            if (id == 0)
+            var result = await _userService.DeleteUser(id);
+            var users = await _userService.GetAllUsers();
+            if (!result)
             {
-                return BadRequest("Invalid ID received");
+                ViewBag.ErrorMessage("Cannot delete this user!");
+                return View("EndUser", users);
             }
 
-            var obj = await _db.Users.FindAsync(id);
-
-            if (obj == null)
-            {
-                return NotFound();
-            }
-            if (obj.Username == "admin" && obj.Email == "admin@admin")
-            {
-                ViewBag("Invalid!");
-                return View("Enduser");
-            }
-
-            _db.Users.Remove(obj);
-            await _db.SaveChangesAsync();
-
-            List<UserDTO> userDTOs =await _db.Users.Select(user => new UserDTO
-            {
-                Id = user.Id,
-                Username = user.Username
-            }).ToListAsync();
-
-
-            return View("Enduser",userDTOs); 
+            return View("EndUser", users);
         }
 
 
         [HttpPost]
         public async Task<IActionResult> EditUser([FromForm]int id)
         {
-            if (id == 0)
-            {
-                return BadRequest("Invalid ID received");
-            }
-
-            var _userData = await _db.Users.FindAsync(id);
-            if (_userData == null)
+            var user = await _userService.GetUserById(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            UserDTO userDTO = new UserDTO
-            {
-                Id = _userData.Id,
-                Username = _userData.Username,
-                Email = _userData.Email
-            };
 
-            return View("EditPage", userDTO);  
+            return View("EditPage", user);
         }
         [HttpPost]
-        public async Task<IActionResult>  EditPost(UserDTO _user)
+        public async Task<IActionResult>  EditPost(UserDTO userDto)
         {
+            var result = await _userService.UpdateUser(userDto);
 
-            if (_user == null || _user.Id==0)
+            if (!result)
             {
-                return BadRequest("Invalid User!");
+
+                return BadRequest();
             }
+            var userList = await _userService.GetAllUsers();
 
-            var _userDetails = await _db.Users.FindAsync(_user.Id);
-            if (_userDetails == null)
-            {
-                return NotFound(_user);
-            }
-            _userDetails.Username = _user.Username;
-            _userDetails.Email = _user.Email;
-
-            await _db.SaveChangesAsync();
-            List<UserDTO> userDTOs =await _db.Users.Select(user => new UserDTO
-            {
-                Id = user.Id,
-                Username = user.Username
-            }).ToListAsync();
-
-
-            return View("Enduser", userDTOs);
-        }
+            return View("Enduser", userList);
+             }
 
         public IActionResult BackToDashboard()
         {

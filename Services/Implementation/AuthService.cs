@@ -45,14 +45,19 @@ namespace YetiMunch.Services.Implementation
 
             return true;
         }
-        public async Task<(string?,List<HotelDto> hotels)> Login(UserDTO requestedUser)
+        public async Task<(string?,List<HotelDto> hotels,UserDTO userDto)> Login(UserDTO requestedUser)
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == requestedUser.Username);
             if (user == null || _passwordHasher.VerifyHashedPassword(user, user.PasswordH, requestedUser.Password) == PasswordVerificationResult.Failed)
             {
-                return (null,null);
+                return (null,new List<HotelDto>(),null);
             }
             string? token = GenerateToken(user);
+            UserDTO userDto = new UserDTO
+            {
+                Username = user.Username,
+                Email = user.Email
+            };
 
             var hotels = await _db.Hotels.Select(h => new HotelDto
             {
@@ -67,7 +72,7 @@ namespace YetiMunch.Services.Implementation
                 Rating = h.Rating
             }).ToListAsync();
 
-            return (token, hotels);
+            return (token, hotels,userDto);
         }
 
         private string GenerateToken(User user)

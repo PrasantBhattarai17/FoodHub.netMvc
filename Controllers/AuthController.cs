@@ -25,14 +25,18 @@ public class AuthController : Controller
 
     [HttpPost]
     public async Task<IActionResult> Login(UserDTO requestedUser)
-    {
-        var (token,hotels) = await _authService.Login(requestedUser);
+     {
+        var (token, hotels, user) = await _authService.Login(requestedUser);
         if (token == null)
         {
             ModelState.AddModelError("Password", "Invalid username or password.");
             return View(requestedUser);
         }
-        //HttpContext.Session.SetString("JWTToken", token);
+        HttpContext.Session.SetString("JWTToken", token);
+        if(user.Username=="admin" && user.Email == "admin@admin")
+        {
+            return View("Dashboard");
+        }
         return View("Marketplace",hotels);
     }
 }

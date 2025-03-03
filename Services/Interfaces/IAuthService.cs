@@ -6,7 +6,7 @@ namespace YetiMunch.Services.Interfaces
     {
         Task<bool> Register(UserDTO loginRequest);
 
-        Task<(string?, List<HotelDto> hotels)> Login(UserDTO requestedUser);
+        Task<(string?, List<HotelDto> hotels,UserDTO userDto)> Login(UserDTO requestedUser);
 
     }
 }
