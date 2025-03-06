@@ -4,16 +4,18 @@ using YetiMunch.Data;
 using YetiMunch.Entities;
 using YetiMunch.Migrations;
 using YetiMunch.Models;
+using YetiMunch.Repository.IRepository;
 using YetiMunch.Services.Interfaces;
 
 namespace YetiMunch.Services.Implementation
 {
     public class FoodService : IFoodService
     {
-        private readonly FoodContext _db;
-        public FoodService(FoodContext db)
+        private readonly IRepository<Food> _foodRepository;
+
+        public FoodService(IRepository<Food> foodRepository)
         {
-            _db = db;
+            _foodRepository = foodRepository;
         }
         public async Task<bool> AddNewFood(FoodDto foodDto)
         {
@@ -32,16 +34,16 @@ namespace YetiMunch.Services.Implementation
                 Amount = foodDto.Amount,
                 HotelId = foodDto.HotelId,
             };
-            await _db.Foods.AddAsync(food);
-            await _db.SaveChangesAsync();
-
+            await _foodRepository.Add(food);
             return true;
 
         }
 
         public async Task<List<FoodDto>> GetAllFood()
         {
-            var food = await _db.Foods.Select(f => new FoodDto
+
+            var foodlist = await _foodRepository.GetQueryable().Include(F => F.Hotel).ToListAsync();
+            var food = foodlist.Select(f => new FoodDto
             {
                 FoodId = f.FoodId,
                 FoodName = f.FoodName,
@@ -52,7 +54,7 @@ namespace YetiMunch.Services.Implementation
                 Discount = f.Discount,
                 HotelId = f.HotelId,
                 HotelName = f.Hotel.HotelName
-            }).ToListAsync();
+            }).ToList();
 
             if (food == null)
             {
@@ -64,7 +66,7 @@ namespace YetiMunch.Services.Implementation
         }
         public async Task<FoodDto> GetFoodById(int id)
         {
-            var food = await _db.Foods.FindAsync(id);
+            var food = await _foodRepository.GetById(id);
             if (food == null)
             {
                 return null;
@@ -86,13 +88,12 @@ namespace YetiMunch.Services.Implementation
 
         public async Task<bool> DeleteFood(int id)
         {
-            var food =await  _db.Foods.FindAsync(id);
+            var food =await  _foodRepository.GetById(id);
             if (food == null)
             {
                 return false;
             }
-            _db.Foods.Remove(food);
-            await _db.SaveChangesAsync();
+             await _foodRepository.Delete(food.FoodId);
             return true; 
         }
 

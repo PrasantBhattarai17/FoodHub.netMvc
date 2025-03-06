@@ -1,21 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using YetiMunch.Data;
+using YetiMunch.Entities;
 using YetiMunch.Models;
+using YetiMunch.Repository.IRepository;
 using YetiMunch.Services.Interfaces;
 
 namespace YetiMunch.Services.Implementation
 {
     public class UserService : IUserService
     {
-        private readonly FoodContext _db;
+        private readonly IRepository<User> _userRepository;
 
-        public UserService(  FoodContext db)
+        public UserService(IRepository<User> userRepository)
         {
-            _db = db;
+            _userRepository = userRepository;
         }
         public async Task<List<UserDTO>> GetAllUsers()
         {
-            var user = await _db.Users.ToListAsync();
+            var user = await _userRepository.GetAll();
             var userLists = user.Select(u => new UserDTO
             {
                 Id = u.Id,
@@ -27,7 +29,7 @@ namespace YetiMunch.Services.Implementation
 
         public async Task<UserDTO?> GetUserById(int id)
         {
-            var user = await _db.Users.FindAsync(id);
+            var user = await _userRepository.GetById(id);
             if (user == null)
                 return null;
 
@@ -42,21 +44,19 @@ namespace YetiMunch.Services.Implementation
         }
         public async Task<bool> DeleteUser(int id)
         {
-            var user = await _db.Users.FindAsync(id);
+            var user = await _userRepository.GetById(id);
             if (user == null || (user.Username=="admin" && user.Email == "admin@admin"))
             {
                 return false;
             }
 
-             _db.Remove(user);
-            await _db.SaveChangesAsync();
-             
+            await _userRepository.Delete(id); 
             return true;
         }
 
         public async Task<bool> UpdateUser(UserDTO user)
         {
-            var existingUser =await _db.Users.FindAsync(user.Id);
+            var existingUser = await _userRepository.GetById(user.Id);
 
             if (existingUser == null)
             {
@@ -66,8 +66,7 @@ namespace YetiMunch.Services.Implementation
             existingUser.Username = user.Username;
             existingUser.Email = user.Email;
 
-            await _db.SaveChangesAsync();
-
+            await _userRepository.Update(existingUser);
             return true;
         }
     }

@@ -46,5 +46,11 @@ namespace YetiMunch.Repository.Implementation
              _dbSet.Update(entity);
             await _db.SaveChangesAsync();
         }
+
+        public IQueryable<T> GetQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
+    
     }
 }

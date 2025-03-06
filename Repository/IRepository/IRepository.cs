@@ -9,6 +9,8 @@
 
         Task Delete(int id);
 
+        IQueryable<T> GetQueryable();
+
 
     }
 }

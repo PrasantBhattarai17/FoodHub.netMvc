@@ -1,24 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using YetiMunch.Data;
+using YetiMunch.Entities;
 using YetiMunch.Models;
+using YetiMunch.Repository.IRepository;
 using YetiMunch.Services.Interfaces;
 
 namespace YetiMunch.Services.Implementation
 {
     public class ShopService : IShopService
     {
-        private readonly FoodContext _db;
+        private readonly IRepository<Hotel> _shopRepository;
 
-        public ShopService(FoodContext db)
+        public ShopService(IRepository<Hotel> shopRepository)
         {
-            _db = db;
-        }
+            _shopRepository = shopRepository;
+                 }
 
         public async Task<HotelDto> ViewHotelDetails(int id)
         {
-            var hotel = await _db.Hotels
-               .Include(h => h.Foods)
-               .FirstOrDefaultAsync(h => h.HotelId == id);
+
+            var hotel = await _shopRepository.GetQueryable().Include(f => f.Foods).FirstOrDefaultAsync(h=>h.HotelId==id);
+               
             if (hotel == null)
             {
                 return null;

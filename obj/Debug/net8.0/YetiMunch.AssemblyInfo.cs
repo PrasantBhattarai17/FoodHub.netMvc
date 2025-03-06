@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("YetiMunch")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+428366f46b6e126748b824f70519a36db5bed4eb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+06841f8c0b182d3630d2dc15d62b4fd513056765")]
 [assembly: System.Reflection.AssemblyProductAttribute("YetiMunch")]
 [assembly: System.Reflection.AssemblyTitleAttribute("YetiMunch")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
