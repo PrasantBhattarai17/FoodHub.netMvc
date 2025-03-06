@@ -7,26 +7,27 @@ using Microsoft.IdentityModel.Tokens;
 using YetiMunch.Data;
 using YetiMunch.Entities;
 using YetiMunch.Models;
+using YetiMunch.Repository.IRepository;
 using YetiMunch.Services.Interfaces;
 
 namespace YetiMunch.Services.Implementation
 {
     public class AuthService : IAuthService
     {
-        private readonly FoodContext _db;
+
+        private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _config;
         private readonly PasswordHasher<User> _passwordHasher;
 
-        public AuthService(FoodContext db, IConfiguration config)
+        public AuthService(IAuthRepository authRepository, IConfiguration config)
         {
-            _db = db;
+            _authRepository = authRepository;
             _config = config;
             _passwordHasher = new PasswordHasher<User>();
         }
         public async Task<bool> Register(UserDTO loginRequest)
         {
-            if (await _db.Users.AnyAsync(u => u.Username == loginRequest.Username) ||
-           await _db.Users.AnyAsync(u => u.Email == loginRequest.Email))
+            if (await _authRepository.IsUserExists(loginRequest.Username,loginRequest.Email))
             {
                 return false;
             }
@@ -40,14 +41,13 @@ namespace YetiMunch.Services.Implementation
                 PasswordH = hashedPassword
             };
 
-            await _db.Users.AddAsync(user);
-            await _db.SaveChangesAsync();
+            await _authRepository.Add(user);
 
             return true;
         }
         public async Task<(string?,List<HotelDto> hotels,UserDTO userDto)> Login(UserDTO requestedUser)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Username == requestedUser.Username);
+            var user = await _authRepository.GetUserByUsername(requestedUser.Username);
             if (user == null || _passwordHasher.VerifyHashedPassword(user, user.PasswordH, requestedUser.Password) == PasswordVerificationResult.Failed)
             {
                 return (null,new List<HotelDto>(),null);
@@ -59,18 +59,7 @@ namespace YetiMunch.Services.Implementation
                 Email = user.Email
             };
 
-            var hotels = await _db.Hotels.Select(h => new HotelDto
-            {
-                HotelId = h.HotelId,
-                HotelName = h.HotelName,
-                HotelImg = h.HotelImg,
-                category = h.category,
-                Cuisines = h.Cuisines,
-                Discount = h.Discount,
-                Price = h.Price,
-                Location = h.Location,
-                Rating = h.Rating
-            }).ToListAsync();
+            var hotels = await _authRepository.GetHotels();
 
             return (token, hotels,userDto);
         }

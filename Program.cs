@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 using YetiMunch.Data;
+using YetiMunch.Repository.Implementation;
+using YetiMunch.Repository.IRepository;
 using YetiMunch.Services.Implementation;
 using YetiMunch.Services.Interfaces;
 
@@ -27,6 +29,8 @@ var key = Encoding.UTF8.GetBytes(jwtSettings["jwtkey"]);
 builder.Services.AddDbContext<FoodContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IHotelService, HotelService>();
