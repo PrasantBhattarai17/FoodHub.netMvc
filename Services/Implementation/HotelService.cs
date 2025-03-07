@@ -12,16 +12,16 @@ namespace YetiMunch.Services.Implementation
     public class HotelService : IHotelService
     {
 
-        private readonly IRepository<Hotel> _hotelRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HotelService(IRepository<Hotel> hotelRepository)
+        public HotelService(IUnitOfWork unitOfWork)
         {
-            _hotelRepository = hotelRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<List<HotelDto>> GetAllHotels()
         {
-            var hotelLists = await _hotelRepository.GetAll();
+            var hotelLists = await _unitOfWork.Repository<Hotel>().GetAll();
 
             var hotelListsDTO=hotelLists.Select(h => new HotelDto
             {
@@ -45,7 +45,8 @@ namespace YetiMunch.Services.Implementation
                 return false;
             }
 
-            await _hotelRepository.Add(hotel);
+            await _unitOfWork.Repository<Hotel>().Add(hotel);
+           await  _unitOfWork.SaveAsync();
             return true;
         }
 
@@ -53,7 +54,7 @@ namespace YetiMunch.Services.Implementation
 
         public async Task<HotelDto> GetHotelById(int id)
         {
-            var hotel = await _hotelRepository.GetById(id);
+            var hotel = await _unitOfWork.Repository<Hotel>().GetById(id);
             if (hotel == null)
             {
                 return null;
@@ -76,21 +77,22 @@ namespace YetiMunch.Services.Implementation
 
         public async Task<bool> RemoveHotel(int id)
         {
-            var hotel = await _hotelRepository.GetById(id);
+            var hotel = await _unitOfWork.Repository<Hotel>().GetById(id);
 
             if (hotel == null)
             {
                 return false;
             }
 
-            await _hotelRepository.Delete(hotel.HotelId);
+            await _unitOfWork.Repository<Hotel>().Delete(hotel.HotelId);
+            await _unitOfWork.SaveAsync();
 
             return true;
         }
 
         public async Task<bool> UpdateHotel(HotelDto hotel)
         {
-            var existingHotel = await _hotelRepository.GetById(hotel.HotelId);
+            var existingHotel = await _unitOfWork.Repository<Hotel>().GetById(hotel.HotelId);
 
             if (existingHotel == null)
             {
@@ -105,7 +107,9 @@ namespace YetiMunch.Services.Implementation
             existingHotel.Location = hotel.Location;
             existingHotel.Rating = hotel.Rating;
 
-            await _hotelRepository.Update(existingHotel);
+            await _unitOfWork.Repository<Hotel>().Update(existingHotel);
+
+            await _unitOfWork.SaveAsync();
 
             return true;
         }

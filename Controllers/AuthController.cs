@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using YetiMunch.Models;
 using YetiMunch.Services.Interfaces;
 
@@ -25,18 +26,35 @@ public class AuthController : Controller
 
     [HttpPost]
     public async Task<IActionResult> Login(UserDTO requestedUser)
-     {
+    {
         var (token, hotels, user) = await _authService.Login(requestedUser);
         if (token == null)
         {
             ModelState.AddModelError("Password", "Invalid username or password.");
             return View(requestedUser);
         }
-        HttpContext.Session.SetString("JWTToken", token);
-        if(user.Username=="admin" && user.Email == "admin@admin")
+
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,   
+            SameSite = SameSiteMode.Strict, 
+            Expires = DateTime.UtcNow.AddHours(1) 
+        };
+        Response.Cookies.Append("JWTToken", token, cookieOptions);
+
+        if (user.Username == "admin" && user.Email == "admin@admin")
         {
             return View("Dashboard");
         }
+
         return View("Marketplace",hotels);
+    }
+
+    [HttpPost]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("JWTToken"); 
+        return View("Login");
     }
 }

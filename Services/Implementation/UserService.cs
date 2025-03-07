@@ -9,15 +9,15 @@ namespace YetiMunch.Services.Implementation
 {
     public class UserService : IUserService
     {
-        private readonly IRepository<User> _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(IRepository<User> userRepository)
+        public UserService(IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<List<UserDTO>> GetAllUsers()
         {
-            var user = await _userRepository.GetAll();
+            var user = await _unitOfWork.Repository<User>().GetAll();
             var userLists = user.Select(u => new UserDTO
             {
                 Id = u.Id,
@@ -29,7 +29,7 @@ namespace YetiMunch.Services.Implementation
 
         public async Task<UserDTO?> GetUserById(int id)
         {
-            var user = await _userRepository.GetById(id);
+            var user = await _unitOfWork.Repository<User>().GetById(id);
             if (user == null)
                 return null;
 
@@ -44,19 +44,20 @@ namespace YetiMunch.Services.Implementation
         }
         public async Task<bool> DeleteUser(int id)
         {
-            var user = await _userRepository.GetById(id);
+            var user = await _unitOfWork.Repository<User>().GetById(id);
             if (user == null || (user.Username=="admin" && user.Email == "admin@admin"))
             {
                 return false;
             }
 
-            await _userRepository.Delete(id); 
+            await _unitOfWork.Repository<User>().Delete(id);
+            await _unitOfWork.SaveAsync();
             return true;
         }
 
         public async Task<bool> UpdateUser(UserDTO user)
         {
-            var existingUser = await _userRepository.GetById(user.Id);
+            var existingUser = await _unitOfWork.Repository<User>().GetById(user.Id);
 
             if (existingUser == null)
             {
@@ -66,7 +67,8 @@ namespace YetiMunch.Services.Implementation
             existingUser.Username = user.Username;
             existingUser.Email = user.Email;
 
-            await _userRepository.Update(existingUser);
+            await _unitOfWork.Repository<User>().Update(existingUser);
+            await _unitOfWork.SaveAsync();
             return true;
         }
     }

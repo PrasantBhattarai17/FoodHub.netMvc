@@ -18,7 +18,6 @@ namespace YetiMunch.Repository.Implementation
         public async Task Add(T entity)
         {
             await _dbSet.AddAsync(entity);
-            await _db.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<T>> GetAll()
@@ -37,14 +36,12 @@ namespace YetiMunch.Repository.Implementation
             if (entity != null)
             {
                 _dbSet.Remove(entity);
-            await _db.SaveChangesAsync();
             }
         }
 
         public async Task Update(T entity)
         {
              _dbSet.Update(entity);
-            await _db.SaveChangesAsync();
         }
 
         public IQueryable<T> GetQueryable()

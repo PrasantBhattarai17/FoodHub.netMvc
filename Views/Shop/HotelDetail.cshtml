@@ -20,8 +20,7 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            background-color: orange;
-            padding: 10px 20px;
+            background-color: darkorange;
         }
 
             .navbarclass .logo {
@@ -30,12 +29,21 @@
             }
 
             .navbarclass .btnOut {
-                margin-left: auto;
-                width: 120px;
+                width: 130px;
                 border-radius: 5px;
+                margin-right: 5px;
                 color: white;
                 text-decoration: none;
-                font-weight: bold;
+                font: bold;
+            }
+
+            .navbarclass .btnmid {
+                width: 60px;
+                border-radius: 5px;
+                margin: 15px;
+                color: white;
+                text-decoration: none;
+                font: bold;
             }
 
         .hero {
@@ -101,12 +109,18 @@
 </head>
 <body>
 
-    <nav class="navbarclass">
+    <nav class="navbarclass ">
         <div class="container-fluid">
             <a asp-controller="Shop" asp-action="MovetoHome">
                 <img class="logo" src="~/logo.png" />
             </a>
         </div>
+        <a asp-controller="Others" asp-action="MovetoLoginPage" class="btnOut">
+            <i class="fa-solid fa-cart-shopping">  Kart</i>
+        </a>
+        <a asp-controller="Others" asp-action="MovetoLoginPage" class="btnmid">
+            <i class="fa-solid fa-user"></i>
+        </a>
         <a asp-controller="Others" asp-action="MovetoLoginPage" class="btnOut">
             <i class="fa-solid fa-right-from-bracket"> Signout</i>
         </a>

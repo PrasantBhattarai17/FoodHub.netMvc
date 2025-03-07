@@ -14,20 +14,19 @@ namespace YetiMunch.Services.Implementation
 {
     public class AuthService : IAuthService
     {
-
-        private readonly IAuthRepository _authRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
         private readonly PasswordHasher<User> _passwordHasher;
 
-        public AuthService(IAuthRepository authRepository, IConfiguration config)
+        public AuthService( IConfiguration config,IUnitOfWork unitOfWork)
         {
-            _authRepository = authRepository;
+            _unitOfWork = unitOfWork;
             _config = config;
             _passwordHasher = new PasswordHasher<User>();
         }
         public async Task<bool> Register(UserDTO loginRequest)
         {
-            if (await _authRepository.IsUserExists(loginRequest.Username,loginRequest.Email))
+            if (await _unitOfWork.auth.IsUserExists(loginRequest.Username,loginRequest.Email))
             {
                 return false;
             }
@@ -41,16 +40,17 @@ namespace YetiMunch.Services.Implementation
                 PasswordH = hashedPassword
             };
 
-            await _authRepository.Add(user);
+            await _unitOfWork.auth.Add(user);
+            await _unitOfWork.SaveAsync();
 
             return true;
         }
         public async Task<(string?,List<HotelDto> hotels,UserDTO userDto)> Login(UserDTO requestedUser)
         {
-            var user = await _authRepository.GetUserByUsername(requestedUser.Username);
+            var user = await _unitOfWork.auth.GetUserByUsername(requestedUser.Username);
             if (user == null || _passwordHasher.VerifyHashedPassword(user, user.PasswordH, requestedUser.Password) == PasswordVerificationResult.Failed)
             {
-                return (null,new List<HotelDto>(),null);
+                return (null,new List<HotelDto>(), new UserDTO());
             }
             string? token = GenerateToken(user);
             UserDTO userDto = new UserDTO
@@ -59,7 +59,7 @@ namespace YetiMunch.Services.Implementation
                 Email = user.Email
             };
 
-            var hotels = await _authRepository.GetHotels();
+            var hotels = await _unitOfWork.auth.GetHotels();
 
             return (token, hotels,userDto);
         }
@@ -78,7 +78,7 @@ namespace YetiMunch.Services.Implementation
 
             var token = new JwtSecurityToken(
                 issuer: jwtSettings["issuer"],
-                audience: jwtSettings["Auidence"],
+                audience: jwtSettings["Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtSettings["ExpireMinutes"])),
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)

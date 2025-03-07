@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AspNetCoreGeneratedDocument;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using YetiMunch.Data;
 using YetiMunch.Entities;
@@ -11,11 +12,11 @@ namespace YetiMunch.Services.Implementation
 {
     public class FoodService : IFoodService
     {
-        private readonly IRepository<Food> _foodRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public FoodService(IRepository<Food> foodRepository)
+        public FoodService(IUnitOfWork unitOfWork)
         {
-            _foodRepository = foodRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<bool> AddNewFood(FoodDto foodDto)
         {
@@ -34,7 +35,8 @@ namespace YetiMunch.Services.Implementation
                 Amount = foodDto.Amount,
                 HotelId = foodDto.HotelId,
             };
-            await _foodRepository.Add(food);
+            await _unitOfWork.Repository<Food>().Add(food);
+            await _unitOfWork.SaveAsync();
             return true;
 
         }
@@ -42,7 +44,7 @@ namespace YetiMunch.Services.Implementation
         public async Task<List<FoodDto>> GetAllFood()
         {
 
-            var foodlist = await _foodRepository.GetQueryable().Include(F => F.Hotel).ToListAsync();
+            var foodlist = await _unitOfWork.Repository<Food>().GetQueryable().Include(F => F.Hotel).ToListAsync();
             var food = foodlist.Select(f => new FoodDto
             {
                 FoodId = f.FoodId,
@@ -66,7 +68,7 @@ namespace YetiMunch.Services.Implementation
         }
         public async Task<FoodDto> GetFoodById(int id)
         {
-            var food = await _foodRepository.GetById(id);
+            var food = await _unitOfWork.Repository<Food>().GetById(id);
             if (food == null)
             {
                 return null;
@@ -88,12 +90,13 @@ namespace YetiMunch.Services.Implementation
 
         public async Task<bool> DeleteFood(int id)
         {
-            var food =await  _foodRepository.GetById(id);
+            var food =await  _unitOfWork.Repository<Food>().GetById(id);
             if (food == null)
             {
                 return false;
             }
-             await _foodRepository.Delete(food.FoodId);
+             await _unitOfWork.Repository<Food>().Delete(food.FoodId);
+            await _unitOfWork.SaveAsync();
             return true; 
         }
 

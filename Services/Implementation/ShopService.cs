@@ -9,17 +9,17 @@ namespace YetiMunch.Services.Implementation
 {
     public class ShopService : IShopService
     {
-        private readonly IRepository<Hotel> _shopRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ShopService(IRepository<Hotel> shopRepository)
+        public ShopService(IUnitOfWork unitOfWork)
         {
-            _shopRepository = shopRepository;
+            _unitOfWork = unitOfWork;
                  }
 
         public async Task<HotelDto> ViewHotelDetails(int id)
         {
 
-            var hotel = await _shopRepository.GetQueryable().Include(f => f.Foods).FirstOrDefaultAsync(h=>h.HotelId==id);
+            var hotel = await _unitOfWork.Repository<Hotel>().GetQueryable().Include(f => f.Foods).FirstOrDefaultAsync(h=>h.HotelId==id);
                
             if (hotel == null)
             {
@@ -54,7 +54,7 @@ namespace YetiMunch.Services.Implementation
             {
                 return null;
             }
-
+            Console.WriteLine("Error",hotelDetails);
             return hotelDetails;
 
         }
