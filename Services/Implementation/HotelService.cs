@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using System.Transactions;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using YetiMunch.Data;
@@ -40,6 +41,9 @@ namespace YetiMunch.Services.Implementation
 
         public async Task<bool> AddHotel(Hotel hotel)
         {
+            using var Transaction=await _unitOfWork.BeginTransaction();
+            {
+          try { 
             if (hotel == null)
             {
                 return false;
@@ -47,7 +51,16 @@ namespace YetiMunch.Services.Implementation
 
             await _unitOfWork.Repository<Hotel>().Add(hotel);
            await  _unitOfWork.SaveAsync();
+           await Transaction.CommitAsync();
             return true;
+           }
+          catch (Exception)
+                {
+                    await Transaction.RollbackAsync();
+                    throw;
+                }
+          }
+            
         }
 
 
@@ -92,6 +105,9 @@ namespace YetiMunch.Services.Implementation
 
         public async Task<bool> UpdateHotel(HotelDto hotel)
         {
+            using var transaction = await _unitOfWork.BeginTransaction();
+            {
+          try {
             var existingHotel = await _unitOfWork.Repository<Hotel>().GetById(hotel.HotelId);
 
             if (existingHotel == null)
@@ -110,8 +126,16 @@ namespace YetiMunch.Services.Implementation
             await _unitOfWork.Repository<Hotel>().Update(existingHotel);
 
             await _unitOfWork.SaveAsync();
+             await transaction.CommitAsync();
 
             return true;
+                }
+         catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+             }
+         }
         }
     }
 }

@@ -2,12 +2,9 @@
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using YetiMunch.Data;
 using YetiMunch.Entities;
 using YetiMunch.Models;
-using YetiMunch.Repository.IRepository;
 using YetiMunch.Services.Interfaces;
 
 namespace YetiMunch.Services.Implementation
@@ -32,18 +29,28 @@ namespace YetiMunch.Services.Implementation
             }
 
             var hashedPassword = _passwordHasher.HashPassword(new User(), loginRequest.Password);
-
-            var user = new User
+                    var user = new User
+                    {
+                        Username = loginRequest.Username,
+                        Email = loginRequest.Email,
+                        PasswordH = hashedPassword
+                    };
+            using var transaction = await _unitOfWork.BeginTransaction();
             {
-                Username = loginRequest.Username,
-                Email = loginRequest.Email,
-                PasswordH = hashedPassword
-            };
+                try
+                {
 
-            await _unitOfWork.auth.Add(user);
-            await _unitOfWork.SaveAsync();
-
-            return true;
+                    await _unitOfWork.auth.Add(user);
+                    await _unitOfWork.SaveAsync();
+                    await transaction.CommitAsync();
+                    return true;
+                }
+                catch(Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
         }
         public async Task<(string?,List<HotelDto> hotels,UserDTO userDto)> Login(UserDTO requestedUser)
         {

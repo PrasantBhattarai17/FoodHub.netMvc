@@ -20,6 +20,12 @@ namespace YetiMunch.Services.Implementation
         }
         public async Task<bool> AddNewFood(FoodDto foodDto)
         {
+            using var transaction = await _unitOfWork.BeginTransaction();
+            {
+                try
+                {
+
+
             if (foodDto == null)
             {
                 return false;
@@ -37,7 +43,15 @@ namespace YetiMunch.Services.Implementation
             };
             await _unitOfWork.Repository<Food>().Add(food);
             await _unitOfWork.SaveAsync();
+            await transaction.CommitAsync();
             return true;
+           }
+           catch
+            {
+                    await transaction.RollbackAsync();
+                    throw;
+             }
+            }
 
         }
 

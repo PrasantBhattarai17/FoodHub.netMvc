@@ -1,11 +1,8 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using YetiMunch.Data;
 using YetiMunch.Entities;
 using YetiMunch.Models;
 using YetiMunch.Services.Interfaces;
-//Controller for Hotels and the food 
 namespace YetiMunch.Controllers
 {
     public class HotelController : Controller

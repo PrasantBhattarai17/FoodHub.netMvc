@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using YetiMunch.Data;
-using YetiMunch.Models;
 using YetiMunch.Services.Interfaces;
 
 namespace YetiMunch.Controllers

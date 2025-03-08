@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using YetiMunch.Data;
 using YetiMunch.Repository.Implementation;
 using YetiMunch.Repository.IRepository;
@@ -28,5 +30,10 @@ public class UnitOfWork : IUnitOfWork
     public async Task SaveAsync()
     {
         await _db.SaveChangesAsync();
+    }
+
+    public async Task<IDbContextTransaction> BeginTransaction()
+    {
+        return await _db.Database.BeginTransactionAsync();
     }
 }

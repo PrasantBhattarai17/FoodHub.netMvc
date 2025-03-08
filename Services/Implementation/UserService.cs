@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Transactions;
+using Microsoft.EntityFrameworkCore;
 using YetiMunch.Data;
 using YetiMunch.Entities;
 using YetiMunch.Models;
@@ -57,19 +58,33 @@ namespace YetiMunch.Services.Implementation
 
         public async Task<bool> UpdateUser(UserDTO user)
         {
-            var existingUser = await _unitOfWork.Repository<User>().GetById(user.Id);
 
-            if (existingUser == null)
+            using var transaction =await _unitOfWork.BeginTransaction();
             {
-                return false;
+                try
+                {
+
+                var existingUser = await _unitOfWork.Repository<User>().GetById(user.Id);
+
+                if (existingUser == null)
+                {
+                    return false;
+                }
+
+                existingUser.Username = user.Username;
+                existingUser.Email = user.Email;
+
+                await _unitOfWork.Repository<User>().Update(existingUser);
+                await _unitOfWork.SaveAsync();
+                    await transaction.CommitAsync();
+                return true;
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
-
-            existingUser.Username = user.Username;
-            existingUser.Email = user.Email;
-
-            await _unitOfWork.Repository<User>().Update(existingUser);
-            await _unitOfWork.SaveAsync();
-            return true;
         }
     }
 }
