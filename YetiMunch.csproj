@@ -13,14 +13,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.5.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Shared\Register.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
+    <ProjectReference Include="..\YetiMunch.Domain\YetiMunch.Domain.csproj" />
+    <ProjectReference Include="..\YetiMunch.Infrastructure\YetiMunch.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
