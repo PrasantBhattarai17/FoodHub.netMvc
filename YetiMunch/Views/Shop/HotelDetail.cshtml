@@ -1,0 +1,196 @@
+﻿@model HotelDto
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.HotelName - Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: antiquewhite;
+        }
+
+        .navbarclass {
+            height: 100px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            background-color: darkorange;
+        }
+
+            .navbarclass .logo {
+                width: 130px;
+                height: 130px;
+            }
+
+            .navbarclass .btnOut {
+                width: 130px;
+                border-radius: 5px;
+                margin-right: 5px;
+                color: white;
+                text-decoration: none;
+                font: bold;
+            }
+
+            .navbarclass .btnmid {
+                width: 60px;
+                border-radius: 5px;
+                margin: 15px;
+                color: white;
+                text-decoration: none;
+                font: bold;
+            }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+            .hero img {
+                width: 350px;
+                height: 250px;
+                border-radius: 10px;
+                object-fit: cover;
+            }
+
+        .hero-details {
+            max-width: 500px;
+        }
+
+        .rating-star {
+            color: gold;
+            font-size: 1.2rem;
+        }
+
+        .food-section {
+            margin-top: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .food-card {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            padding-right:50px;
+            margin-bottom: 15px;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+            .food-card img {
+                width: 100px;
+                height: 100px;
+                border-radius: 8px;
+                margin-right: 15px;
+                object-fit: cover;
+            }
+            .food-card .food_inner{
+                display:flex;
+                
+            } 
+            
+    </style>
+</head>
+<body>
+
+    <nav class="navbarclass ">
+        <div class="container-fluid">
+            <a asp-controller="Shop" asp-action="MovetoHome">
+                <img class="logo" src="~/logo.png" />
+            </a>
+        </div>
+        <a asp-controller="Others" asp-action="MovetoLoginPage" class="btnOut">
+            <i class="fa-solid fa-cart-shopping">  Kart</i>
+        </a>
+        <a asp-controller="Others" asp-action="MovetoLoginPage" class="btnmid">
+            <i class="fa-solid fa-user"></i>
+        </a>
+        <a asp-controller="Others" asp-action="MovetoLoginPage" class="btnOut">
+            <i class="fa-solid fa-right-from-bracket"> Signout</i>
+        </a>
+    </nav>
+
+    <div class="container mt-5">
+       <a asp-controller="Shop" asp-action="MovetoHome"  class="btn btn-warning text-white">
+       <i class="fa-solid fa-arrow-left"> Back</i>
+       </a>
+        <div class="hero">
+            <img src="@Model.HotelImg" alt="@Model.HotelName">
+            <div class="hero-details">
+                <h2>@Model.HotelName</h2>
+                <p><strong>Category:</strong> @Model.category</p>
+                <p><strong>Location:</strong> @Model.Location</p>
+                <p><strong>Cuisines:</strong> @Model.Cuisines</p>
+                <p><strong>Discount:</strong> @Model.Discount%</p>
+                <p><strong>Price:</strong> $@Model.Price</p>
+                <div class="rating">
+                    <strong>Rating:</strong>
+                    @for (var i = 0; i < Model.Rating; i++)
+                    {
+                        <span class="rating-star">★</span>
+                    }
+                    @for (var i = Model.Rating; i < 5; i++)
+                    {
+                        <span class="rating-star">☆</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="food-section mt-4">
+            <h3 class="text-center">Available Foods</h3>
+            @if (Model.Foods.Any())
+            {
+                @foreach (var food in Model.Foods)
+                {
+                    <div class="food-card">
+                        <div class="food_inner">
+                        <img style="height:200px; width:200px;" src="@food.FoodImgUrl" alt="@food.FoodName">
+                        <div>
+                            <h4>@food.FoodName</h4>
+                            <p>Price:$@food.Cost</p>
+                            <p>Category:@food.Category</p>
+                            <p>Amount:@food.Amount</p>
+                            <p>Discount:@food.Discount</p>
+                        </div>
+                        </div>
+                        <div >
+                            <b>Description :</b>
+                            <p>@food.Description</p>
+                        </div>
+
+                        <div class="Add">
+                            <a class="btn-warning rounded-1 text-white p-2 text-decoration-none ">
+                                <i class="fa-solid fa-plus">
+                                Add to Cart
+                                </i>
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-center">No foods available in this hotel.</p>
+            }
+        </div>
+    </div>
+
+</body>
+</html>

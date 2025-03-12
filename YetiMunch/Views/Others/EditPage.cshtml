@@ -1,0 +1,38 @@
+﻿@model UserDTO
+
+<div class="container">
+    <form method="post" asp-controller="Others" asp-action="EditPost">
+        <h1>Edit the User</h1>
+
+        <!-- Hidden ID Field -->
+        <input type="hidden" asp-for="Id" />
+
+        <div class="container pt-4">
+            <div class="col">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Username" class="form-label"></label>
+                    <input asp-for="Username" class="form-control border-1 rounded" autocomplete="off" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control border-1 rounded" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 pt-2 d-flex justify-content-center align-items-center">
+                    <button class="btn btn-dark rounded w-25 fs-5" type="submit">Edit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+}
