@@ -58,3 +58,4 @@ C:\Users\V C T U S\source\repos\FoodMunch.NetMvc\YetiMunch.Infrastructure\obj\De
 C:\Users\V C T U S\source\repos\FoodMunch.NetMvc\YetiMunch.Infrastructure\obj\Debug\net8.0\refint\YetiMunch.Infrastructure.dll
 C:\Users\V C T U S\source\repos\FoodMunch.NetMvc\YetiMunch.Infrastructure\obj\Debug\net8.0\YetiMunch.Infrastructure.pdb
 C:\Users\V C T U S\source\repos\FoodMunch.NetMvc\YetiMunch.Infrastructure\obj\Debug\net8.0\ref\YetiMunch.Infrastructure.dll
+C:\Users\V C T U S\source\repos\FoodMunch.NetMvc\YetiMunch.Infrastructure\obj\Debug\net8.0\YetiMunch.Infrastructure.sourcelink.json

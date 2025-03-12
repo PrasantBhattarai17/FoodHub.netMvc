@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using YetiMunch.Entities;
+using YetiMunch.Infrastructure.Data.Configurations;
 
 namespace YetiMunch.Data
 {
@@ -18,14 +19,10 @@ namespace YetiMunch.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Food>()
-                .HasOne(f => f.Hotel) //must have one Hotel
-                .WithMany(h => h.Foods) //One Hotel can have many foods
-                .HasForeignKey(f => f.HotelId)//HotelId is Foreign key in Food Table
-                .OnDelete(DeleteBehavior.Cascade);//When the hotels are deleted it automatically deletes the assocaited foods too
+            modelBuilder.ApplyConfiguration(new FoodConfiguration());
+            modelBuilder.ApplyConfiguration(new HotelConfiguration());
 
             base.OnModelCreating(modelBuilder);
-
         }
 
         

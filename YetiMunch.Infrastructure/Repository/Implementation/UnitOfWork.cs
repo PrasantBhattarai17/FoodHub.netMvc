@@ -13,7 +13,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly Dictionary<Type, object> _repositories = new();
     public IAuthRepository auth { get; private set; }
 
-    IAuthRepository IUnitOfWork.auth => throw new NotImplementedException();
+    IAuthRepository IUnitOfWork.auth => auth;
 
     public UnitOfWork(FoodContext db)
     {
@@ -39,8 +39,5 @@ public class UnitOfWork : IUnitOfWork
         return await _db.Database.BeginTransactionAsync();
     }
 
-    IRepository<T> IUnitOfWork.Repository<T>()
-    {
-        throw new NotImplementedException();
-    }
+    
 }
